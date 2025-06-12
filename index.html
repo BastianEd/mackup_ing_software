@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sistema Aduanero Chileno - Modernización Fronteriza</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --chile-blue: #0039a6;
+        /* Azul institucional más profundo */
+        --chile-red: #d52b1e;
+        /* Rojo chileno */
+        --chile-white: #f0f2f5;
+        /* Blanco con tono grisáceo */
+        --dark-blue: #002366;
+        /* Azul oscuro para fondos */
+        --light-red: #ff6b6b;
+        /* Rojo claro para acentos */
+        --medium-gray: #5c677d;
+        /* Texto secundario */
+        --dark-text: #1a2b42;
+        /* Texto principal oscuro */
+        --card-bg: #ffffff;
+        /* Fondo de tarjetas */
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          var(--chile-white) 0%,
+          #e6e9f0 100%
+        );
+        color: var(--dark-text);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Header */
+      header {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, var(--chile-blue) 100%);
+        padding: 15px 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--chile-red) 0%, #b22222 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+      }
+
+      .logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        white-space: nowrap;
+      }
+
+      .logo-text span {
+        color: var(--light-red);
+        font-weight: 600;
+      }
+
+      nav ul {
+        display: flex;
+        list-style: none;
+        gap: 25px;
+        flex-wrap: wrap;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+        transition: color 0.3s;
+        position: relative;
+        font-size: 16px;
+        padding: 8px 0;
+        white-space: nowrap;
+      }
+
+      nav a:hover,
+      nav a.active {
+        color: white;
+      }
+
+      nav a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background-color: var(--chile-red);
+        transition: width 0.3s;
+      }
+
+      nav a:hover::after,
+      nav a.active::after {
+        width: 100%;
+      }
+
+      .auth-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--chile-red) 0%, #c41e3a 100%);
+        color: white;
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1.5px solid white;
+        color: white;
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn-outline:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Main Content */
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 30px;
+        padding: 40px 0;
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 57, 166, 0.05) 0%,
+          rgba(213, 43, 30, 0.05) 100%
+        );
+        padding: 40px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+      }
+
+      .hero h1 {
+        font-size: 2.3rem;
+        margin-bottom: 20px;
+        color: var(--dark-blue);
+        font-weight: 700;
+        line-height: 1.1;
+      }
+
+      .hero h1 span {
+        color: var(--chile-red);
+        font-weight: 700;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        color: var(--medium-gray);
+        line-height: 1.8;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .stat-item {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        border-left: 4px solid var(--chile-blue);
+        transition: transform 0.3s;
+      }
+
+      .stat-item:nth-child(2) {
+        border-left-color: var(--chile-red);
+      }
+
+      .stat-item:nth-child(3) {
+        border-left-color: #2a9d8f;
+      }
+
+      .stat-item:hover {
+        transform: translateY(-5px);
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: var(--chile-blue);
+      }
+
+      .stat-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--dark-blue);
+      }
+
+      .stat-label {
+        font-size: 0.95rem;
+        color: var(--medium-gray);
+        font-weight: 500;
+      }
+
+      /* Features Section */
+      .features {
+        margin-bottom: 40px;
+      }
+
+      .section-title {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--chile-blue);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .section-title h2 {
+        font-size: 1.8rem;
+        color: var(--dark-blue);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .feature-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      }
+
+      .feature-icon {
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        background: linear-gradient(135deg, var(--chile-blue) 0%, #0056b3 100%);
+      }
+
+      .feature-content {
+        padding: 25px;
+        flex-grow: 1;
+      }
+
+      .feature-content h3 {
+        margin-bottom: 15px;
+        color: var(--dark-blue);
+        font-size: 1.3rem;
+      }
+
+      .feature-content p {
+        color: var(--medium-gray);
+        line-height: 1.7;
+        font-size: 0.95rem;
+      }
+
+      /* Charts Section */
+      .charts-section {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .chart-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 25px;
+      }
+
+      .chart-card {
+        background: var(--chile-white);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+      }
+
+      .chart-title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: var(--dark-blue);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+      }
+
+      .chart-wrapper {
+        position: relative;
+        height: 250px;
+      }
+
+      /* Forms Section */
+      .forms-preview {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .forms-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 25px;
+      }
+
+      .form-card {
+        background: var(--chile-white);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s;
+        border-top: 4px solid var(--chile-blue);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-card:nth-child(2) {
+        border-top-color: var(--chile-red);
+      }
+
+      .form-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .form-header {
+        background: var(--chile-blue);
+        color: white;
+        padding: 20px;
+      }
+
+      .form-header h3 {
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-body {
+        padding: 20px;
+        flex-grow: 1;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark-text);
+        font-size: 0.95rem;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        background-color: white;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--chile-blue);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 57, 166, 0.1);
+      }
+
+      .form-footer {
+        padding: 0 20px 20px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, #002366 100%);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        color: white;
+        height: fit-content;
+      }
+
+      .sidebar-title {
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        border-bottom: 2px solid var(--chile-red);
+        padding-bottom: 15px;
+      }
+
+      .sidebar-links {
+        list-style: none;
+        margin-bottom: 30px;
+      }
+
+      .sidebar-links li {
+        margin-bottom: 15px;
+      }
+
+      .sidebar-links a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: all 0.3s;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .sidebar-links a:hover,
+      .sidebar-links a.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      .info-card {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 25px;
+      }
+
+      .info-card h3 {
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--light-red);
+      }
+
+      .info-card p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* Footer */
+      footer {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, var(--chile-blue) 100%);
+        color: white;
+        padding: 50px 0 20px;
+        margin-top: 50px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .footer-column h3 {
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+        position: relative;
+        padding-bottom: 12px;
+        font-weight: 600;
+      }
+
+      .footer-column h3::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--chile-red);
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-links li {
+        margin-bottom: 12px;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        transition: color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.95rem;
+        white-space: nowrap;
+      }
+
+      .footer-links a:hover {
+        color: white;
+      }
+
+      .contact-info {
+        list-style: none;
+      }
+
+      .contact-info li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.95rem;
+        white-space: nowrap;
+      }
+
+      .contact-info i {
+        color: var(--light-red);
+        min-width: 20px;
+        margin-top: 4px;
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+
+      /* Tabs */
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #ddd;
+        flex-wrap: wrap;
+      }
+
+      .tab {
+        padding: 12px 25px;
+        background: var(--chile-white);
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+        border-bottom: none;
+        position: relative;
+        bottom: -1px;
+        white-space: nowrap;
+      }
+
+      .tab.active {
+        background: white;
+        border-color: #ddd;
+        font-weight: 600;
+        color: var(--chile-blue);
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+        animation: fadeIn 0.5s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          order: -1;
+          margin-bottom: 30px;
+        }
+
+        .header-content {
+          flex-direction: column;
+          gap: 20px;
+          align-items: center;
+        }
+
+        nav ul {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .hero h1 {
+          font-size: 1.8rem;
+          text-align: center;
+        }
+
+        .auth-buttons {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .hero {
+          padding: 25px;
+        }
+
+        .section-title h2 {
+          font-size: 1.5rem;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        nav ul {
+          gap: 12px;
+          justify-content: center;
+        }
+      }
+    </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-flag" aria-hidden="true"></i>
+        </div>
+        <div class="logo-text">
+          Aduanas <span>Chile</span>
+        </div>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="#" class="active"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+          <li>
+            <a href="#estadisticas-heading"><i class="fas fa-chart-bar" aria-hidden="true"></i> Estadísticas</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="auth-buttons">
+        <button class="btn btn-outline" id="btnViajero" aria-label="Portal Viajero" type="button">
+          <i class="fas fa-user" aria-hidden="true"></i> Portal Viajero
+        </button>
+        <div class="auth-buttons">
+        <a class="btn btn-primary" href="./acc_fun.html" aria-current="page" aria-label="Acceso Funcionarios" tabindex="0"><i class="fas fa-lock" aria-hidden="true"></i> Acceso Funcionarios</a>
+      </div>
+      </div>
+      
+    </div>
+  </header>
+
+  <div class="container main-content">
+    <!-- Contenido Principal -->
+    <div class="content-column" role="main">
+      <!-- Hero Section -->
+      <section class="hero" aria-label="Introducción Sistema">
+        <h1>
+          Sistema Integrado de
+          <span>Gestión Aduanera</span>
+        </h1>
+        <p>
+          Modernización de procesos fronterizos para reducir tiempos de espera y
+          mejorar la experiencia de usuarios en los pasos fronterizos de Chile.
+        </p>
+
+        <div class="stats" role="list" aria-label="Estadísticas clave del sistema">
+          <div class="stat-item" role="listitem">
+            <div class="stat-icon" aria-hidden="true">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-value">80%</div>
+            <div class="stat-label">Reducción en tiempos de espera</div>
+          </div>
+          <div class="stat-item" role="listitem">
+            <div class="stat-icon" aria-hidden="true">
+              <i class="fas fa-sync-alt"></i>
+            </div>
+            <div class="stat-value">3+</div>
+            <div class="stat-label">Organismos integrados</div>
+          </div>
+          <div class="stat-item" role="listitem">
+            <div class="stat-icon" aria-hidden="true">
+              <i class="fas fa-flag"></i>
+            </div>
+            <div class="stat-value">2</div>
+            <div class="stat-label">Países conectados</div>
+          </div>
+          <div class="stat-item" role="listitem">
+            <div class="stat-icon" aria-hidden="true">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-value">200K+</div>
+            <div class="stat-label">Usuarios mensuales</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="features" aria-labelledby="servicios-heading">
+        <div class="section-title">
+          <h2 id="servicios-heading">
+            <i class="fas fa-cogs" aria-hidden="true"></i> Servicios del Sistema
+          </h2>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card" tabindex="0">
+            <div class="feature-icon" aria-hidden="true">
+              <i class="fas fa-laptop-code"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Pre-registro en Línea</h3>
+              <p>
+                Complete formularios antes de llegar a la frontera. Ahorre tiempo y
+                evite trámites manuales en ventanilla.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature-card" tabindex="0">
+            <div class="feature-icon" aria-hidden="true">
+              <i class="fas fa-child"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Documentos de Menores</h3>
+              <p>
+                Digitalización de autorizaciones notariales para menores que viajan.
+                Verificación inmediata en controles.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature-card" tabindex="0">
+            <div class="feature-icon" aria-hidden="true">
+              <i class="fas fa-car"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Gestión de Vehículos</h3>
+              <p>
+                Registro en línea de datos de vehículos para cruce fronterizo.
+                Validación automática con base de datos.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature-card" tabindex="0">
+            <div class="feature-icon" aria-hidden="true">
+              <i class="fas fa-globe-americas"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Integración Internacional</h3>
+              <p>
+                Interoperabilidad con sistemas de países vecinos para evitar doble
+                registro y agilizar controles binacionales.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature-card" tabindex="0">
+            <div class="feature-icon" aria-hidden="true">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Reportes Automatizados</h3>
+              <p>
+                Generación de estadísticas de flujos fronterizos para toma de
+                decisiones operativas y estratégicas.
+              </p>
+            </div>
+          </article>
+
+          <article class="feature-card" tabindex="0">
+            <div class="feature-icon" aria-hidden="true">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Seguridad Avanzada</h3>
+              <p>
+                Autenticación de usuarios, cifrado de datos y registro de operaciones
+                para garantizar confidencialidad.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Charts Section -->
+      <section class="charts-section" aria-labelledby="estadisticas-heading">
+        <div class="section-title" id="estadisticas-vinculo">
+          <h2 id="estadisticas-heading">
+            <i class="fas fa-chart-line" aria-hidden="true"></i> Estadísticas Fronterizas
+          </h2>
+        </div>
+
+        <div class="chart-container">
+          <section class="chart-card" aria-label="Gráfico de flujo de viajeros">
+            <div class="chart-title">
+              <i class="fas fa-users" aria-hidden="true"></i> Flujo de Viajeros
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="travelersChart" aria-describedby="descTravelersChart"></canvas>
+              <p id="descTravelersChart" class="sr-only">
+                Gráfico de línea mostrando el número de viajeros en miles
+                mes a mes.
+              </p>
+            </div>
+          </section>
+
+          <section class="chart-card" aria-label="Gráfico de vehículos procesados">
+            <div class="chart-title">
+              <i class="fas fa-car" aria-hidden="true"></i> Vehículos Procesados
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="vehiclesChart" aria-describedby="descVehiclesChart"></canvas>
+              <p id="descVehiclesChart" class="sr-only">
+                Gráfico de barras mostrando la cantidad procesada de diversos
+                tipos de vehículos.
+              </p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- Forms Section -->
+      <section class="forms-preview" aria-labelledby="tramites-heading">
+        <div class="section-title">
+          <h2 id="tramites-heading"><i class="fas fa-file-alt" aria-hidden="true"></i> Trámites Digitales</h2>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Navegación de trámites digitales">
+          <button
+            role="tab"
+            class="tab active"
+            id="tab-viajero"
+            aria-controls="viajero-content"
+            aria-selected="true"
+            data-tab="viajero"
+            type="button"
+          >
+            Portal Viajero
+          </button>
+        </div>
+
+        <!-- Portal Viajero -->
+        <section
+          role="tabpanel"
+          class="tab-content active"
+          id="viajero-content"
+          aria-labelledby="tab-viajero"
+          tabindex="0"
+        >
+          <div class="forms-container">
+            <div class="form-card">
+              <div class="form-header">
+                <h3><i class="fas fa-seedling" aria-hidden="true"></i> Declaración Jurada SAG</h3>
+              </div>
+              <div class="form-body">
+                <div class="form-group">
+                  <label for="sag-products">Productos Agrícolas o Animales</label>
+                  <select id="sag-products">
+                    <option value="">Seleccione una opción</option>
+                    <option value="si">Sí, declaro productos</option>
+                    <option value="no">No, no declaro productos</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="sag-details">Detalle de Productos</label>
+                  <textarea
+                    id="sag-details"
+                    rows="3"
+                    placeholder="Describa los productos que transporta"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="form-footer">
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-paper-plane" aria-hidden="true"></i> Enviar Declaración
+                </button>
+              </div>
+            </div>
+
+            <div class="form-card">
+              <div class="form-header">
+                <h3><i class="fas fa-car-alt" aria-hidden="true"></i> Salida Temporal de Vehículo</h3>
+              </div>
+              <div class="form-body">
+                <div class="form-group">
+                  <label for="vehicle-plate">Patente del Vehículo</label>
+                  <input type="text" id="vehicle-plate" placeholder="Ej: AB123CD" />
+                </div>
+
+                <div class="form-group">
+                  <label for="vehicle-brand">Marca y Modelo</label>
+                  <input type="text" id="vehicle-brand" placeholder="Ej: Toyota Hilux" />
+                </div>
+
+                <div class="form-group">
+                  <label for="driver-name">Nombre del Conductor</label>
+                  <input type="text" id="driver-name" placeholder="Nombre completo" />
+                </div>
+              </div>
+              <div class="form-footer">
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-paper-plane" aria-hidden="true"></i> Registrar Vehículo
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" role="complementary" aria-label="Información importante">
+      <h2 class="sidebar-title">
+        <i class="fas fa-exclamation-circle" aria-hidden="true"></i> Información Importante
+      </h2>
+
+      <ul class="sidebar-links" role="list">
+        <li role="listitem">
+          <a href="#" class="active"><i class="fas fa-passport" aria-hidden="true"></i> Requisitos de Viaje</a>
+        </li>
+        <li role="listitem">
+          <a href="#"><i class="fas fa-map-marked-alt" aria-hidden="true"></i> Pasos Fronterizos</a>
+        </li>
+        <li role="listitem">
+          <a href="#"><i class="fas fa-file-contract" aria-hidden="true"></i> Normativa Aduanera</a>
+        </li>
+        <li role="listitem">
+          <a href="#"><i class="fas fa-question-circle" aria-hidden="true"></i> Preguntas Frecuentes</a>
+        </li>
+        <li role="listitem">
+          <a href="#"><i class="fas fa-phone-alt" aria-hidden="true"></i> Contacto y Soporte</a>
+        </li>
+      </ul>
+
+      <div class="info-card">
+        <h3><i class="fas fa-clock" aria-hidden="true"></i> Horarios de Atención</h3>
+        <p>
+          Los pasos fronterizos terrestres atienden las 24 horas del día, los 7 días de la semana.
+          Los trámites en línea están disponibles permanentemente.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <h3><i class="fas fa-lightbulb" aria-hidden="true"></i> Consejo Útil</h3>
+        <p>
+          Complete sus formularios al menos 24 horas antes de su viaje para garantizar que su
+          información esté disponible en el sistema al llegar a la frontera.
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <section class="footer-column" aria-label="Sistema Aduanero Integrado">
+          <h3>Sistema Aduanero Integrado</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Sobre el Proyecto</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Beneficios</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Noticias</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-column" aria-label="Organismos">
+          <h3>Organismos</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Servicio Nacional de Aduanas</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> PDI - Policía de Investigaciones</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> SAG - Servicio Agrícola y Ganadero</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-column" aria-label="Enlaces Rápidos">
+          <h3>Enlaces Rápidos</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Portal Viajero</a></li>
+            <li role="listitem"><a href="./acc_fun.html"><i class="fas fa-chevron-right"></i> Acceso Funcionarios</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-column" aria-label="Contacto">
+          <h3>Contacto</h3>
+          <ul class="contact-info" role="list">
+            <li><i class="fas fa-map-marker-alt"></i> Av. Libertador Bernardo O'Higgins 1345, Santiago</li>
+            <li><i class="fas fa-phone-alt"></i> +56 2 1111 1111</li>
+            <li><i class="fas fa-envelope"></i> contacto@aduanasmodernas.cl</li>
+            <li><i class="fas fa-headset"></i> soporte@aduanasmodernas.cl</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="copyright">
+        &copy; 2025 Sistema Integrado de Gestión Aduanera Fronteriza. Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Inicializar gráficos
+    document.addEventListener("DOMContentLoaded", function () {
+      const travelersCtx = document.getElementById("travelersChart").getContext("2d");
+      const travelersChart = new Chart(travelersCtx, {
+        type: "line",
+        data: {
+          labels: [
+            "Ene",
+            "Feb",
+            "Mar",
+            "Abr",
+            "May",
+            "Jun",
+            "Jul",
+            "Ago",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dic",
+          ],
+          datasets: [
+            {
+              label: "Viajeros (miles)",
+              data: [120, 135, 142, 130, 118, 105, 115, 128, 140, 152, 165, 180],
+              borderColor: "#0039A6",
+              backgroundColor: "rgba(0, 57, 166, 0.1)",
+              borderWidth: 3,
+              tension: 0.3,
+              fill: true,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: "rgba(0,0,0,0.05)",
+              },
+            },
+            x: {
+              grid: {
+                display: false,
+              },
+            },
+          },
+        },
+      });
+
+      const vehiclesCtx = document
+        .getElementById("vehiclesChart")
+        .getContext("2d");
+      const vehiclesChart = new Chart(vehiclesCtx, {
+        type: "bar",
+        data: {
+          labels: [
+            "Automóviles",
+            "Camionetas",
+            "Camiones",
+            "Motocicletas",
+            "Otros",
+          ],
+          datasets: [
+            {
+              label: "Vehículos procesados",
+              data: [65000, 42000, 18000, 15000, 5000],
+              backgroundColor: [
+                "rgba(0, 57, 166, 0.7)",
+                "rgba(213, 43, 30, 0.7)",
+                "rgba(0, 57, 166, 0.5)",
+                "rgba(213, 43, 30, 0.5)",
+                "rgba(0, 57, 166, 0.3)",
+              ],
+              borderColor: [
+                "rgba(0, 57, 166, 1)",
+                "rgba(213, 43, 30, 1)",
+                "rgba(0, 57, 166, 1)",
+                "rgba(213, 43, 30, 1)",
+                "rgba(0, 57, 166, 1)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: "rgba(0,0,0,0.05)",
+              },
+            },
+            x: {
+              grid: {
+                display: false,
+              },
+            },
+          },
+        },
+      });
+
+      // Tabs functionality
+      const tabs = document.querySelectorAll(".tab");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          // Remove active class from all tabs
+          tabs.forEach((t) => {
+            t.classList.remove("active");
+            t.setAttribute("aria-selected", "false");
+          });
+          // Add active class to clicked tab
+          tab.classList.add("active");
+          tab.setAttribute("aria-selected", "true");
+
+          // Hide all tab contents
+          document.querySelectorAll(".tab-content").forEach((content) => {
+            content.classList.remove("active");
+            content.setAttribute("hidden", "");
+          });
+
+          // Show corresponding content
+          const tabId = tab.getAttribute("data-tab");
+          const contentShow = document.getElementById(`${tabId}-content`);
+          contentShow.classList.add("active");
+          contentShow.removeAttribute("hidden");
+          contentShow.focus();
+        });
+      });
+
+      // Botones de acceso
+      document.getElementById("btnViajero").addEventListener("click", () => {
+        tabs.forEach((t) => {
+          t.classList.remove("active");
+          t.setAttribute("aria-selected", "false");
+        });
+        document.querySelector('[data-tab="viajero"]').classList.add("active");
+        document.querySelector('[data-tab="viajero"]').setAttribute("aria-selected", "true");
+
+        document.querySelectorAll(".tab-content").forEach((content) => {
+          content.classList.remove("active");
+          content.setAttribute("hidden", "");
+        });
+        const viajeroContent = document.getElementById("viajero-content");
+        viajeroContent.classList.add("active");
+        viajeroContent.removeAttribute("hidden");
+        viajeroContent.focus();
+
+        // Scroll a la sección
+        document.querySelector(".forms-preview").scrollIntoView({
+          behavior: "smooth",
+        });
+      });
+
+      // Simular envío de formularios
+      const forms = document.querySelectorAll(".form-footer .btn");
+      forms.forEach((button) => {
+        button.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const card = this.closest(".form-card");
+          const originalText = this.innerHTML;
+
+          // Mostrar feedback
+          this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+          this.disabled = true;
+
+          // Simular proceso
+          setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-check"></i> Completado!';
+
+            // Resetear después de 2 segundos
+            setTimeout(() => {
+              this.innerHTML = originalText;
+              this.disabled = false;
+              card.querySelectorAll("input, select, textarea").forEach((input) => {
+                input.value = "";
+              });
+            }, 2000);
+          }, 1500);
+        });
+      });
+
+      // Efecto de scroll para header
+      window.addEventListener("scroll", function () {
+        const header = document.querySelector("header");
+        if (window.scrollY > 50) {
+          header.style.boxShadow = "0 5px 20px rgba(0,0,0,0.15)";
+        } else {
+          header.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

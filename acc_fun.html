@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sistema Aduanero Chileno - Acceso Funcionarios</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      :root {
+        --chile-blue: #0039a6;
+        --chile-red: #d52b1e;
+        --chile-white: #f0f2f5;
+        --dark-blue: #002366;
+        --light-red: #ff6b6b;
+        --medium-gray: #5c677d;
+        --dark-text: #1a2b42;
+        --card-bg: #ffffff;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          var(--chile-white) 0%,
+          #e6e9f0 100%
+        );
+        color: var(--dark-text);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Header */
+      header {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, var(--chile-blue) 100%);
+        padding: 15px 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--chile-red) 0%, #b22222 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+      }
+
+      .logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        white-space: nowrap;
+      }
+
+      .logo-text span {
+        color: var(--light-red);
+        font-weight: 600;
+      }
+
+      nav ul {
+        display: flex;
+        list-style: none;
+        gap: 25px;
+        flex-wrap: wrap;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: rgba(255,255,255,0.9);
+        font-weight: 500;
+        transition: color 0.3s;
+        position: relative;
+        font-size: 16px;
+        padding: 8px 0;
+        white-space: nowrap;
+      }
+
+      nav a:hover,
+      nav a.active {
+        color: white;
+      }
+
+      nav a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background-color: var(--chile-red);
+        transition: width 0.3s;
+      }
+
+      nav a:hover::after,
+      nav a.active::after {
+        width: 100%;
+      }
+
+      .auth-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn, .auth-buttons a {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        text-decoration: none;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .btn-primary, .auth-buttons a.btn-primary {
+        background: linear-gradient(135deg, var(--chile-red) 0%, #c41e3a 100%);
+        color: white;
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1.5px solid white;
+        color: white;
+      }
+
+      .btn:hover,
+      .auth-buttons a.btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      }
+
+      .btn-outline:hover {
+        background-color: rgba(255,255,255,0.1);
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 30px;
+        padding: 40px 0;
+      }
+
+      /* Forms Section */
+      .forms-preview {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+
+      .forms-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 25px;
+      }
+
+      .form-card {
+        background: var(--chile-white);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s;
+        border-top: 4px solid var(--chile-blue);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-card:nth-child(2) {
+        border-top-color: var(--chile-red);
+      }
+
+      .form-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .form-header {
+        background: var(--chile-blue);
+        color: white;
+        padding: 20px;
+      }
+
+      .form-header h3 {
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-body {
+        padding: 20px;
+        flex-grow: 1;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark-text);
+        font-size: 0.95rem;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        background-color: white;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--chile-blue);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0,57,166,0.1);
+      }
+
+      .form-footer {
+        padding: 0 20px 20px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, #002366 100%);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        color: white;
+        height: fit-content;
+      }
+
+      .sidebar-title {
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        border-bottom: 2px solid var(--chile-red);
+        padding-bottom: 15px;
+      }
+
+      .sidebar-links {
+        list-style: none;
+        margin-bottom: 30px;
+      }
+
+      .sidebar-links li {
+        margin-bottom: 15px;
+      }
+
+      .sidebar-links a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255,255,255,0.9);
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: all 0.3s;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .sidebar-links a:hover,
+      .sidebar-links a.active {
+        background: rgba(255,255,255,0.1);
+        color: white;
+      }
+
+      .info-card {
+        background: rgba(255,255,255,0.08);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 25px;
+      }
+
+      .info-card h3 {
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--light-red);
+      }
+
+      .info-card p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.85);
+      }
+
+      /* Footer */
+      footer {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, var(--chile-blue) 100%);
+        color: white;
+        padding: 50px 0 20px;
+        margin-top: 50px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .footer-column h3 {
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+        position: relative;
+        padding-bottom: 12px;
+        font-weight: 600;
+      }
+
+      .footer-column h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--chile-red);
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-links li {
+        margin-bottom: 12px;
+      }
+
+      .footer-links a {
+        color: rgba(255,255,255,0.85);
+        text-decoration: none;
+        transition: color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.95rem;
+        white-space: nowrap;
+      }
+
+      .footer-links a:hover {
+        color: white;
+      }
+
+      .contact-info {
+        list-style: none;
+      }
+
+      .contact-info li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        color: rgba(255,255,255,0.9);
+        font-size: 0.95rem;
+        white-space: nowrap;
+      }
+
+      .contact-info i {
+        color: var(--light-red);
+        min-width: 20px;
+        margin-top: 4px;
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          order: -1;
+          margin-bottom: 30px;
+        }
+
+        .header-content {
+          flex-direction: column;
+          gap: 20px;
+          align-items: center;
+        }
+
+        nav ul {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 600px) {
+        nav ul {
+          gap: 12px;
+          justify-content: center;
+        }
+      }
+    </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <div class="logo-icon"><i class="fas fa-flag" aria-hidden="true"></i></div>
+        <div class="logo-text">Aduanas <span>Chile</span></div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+        </ul>
+      </nav>
+      <div class="auth-buttons">
+        <a class="btn btn-primary" href="index.html" aria-current="page" aria-label="Portal Viajero" tabindex="0"><i class="fas fa-lock" aria-hidden="true"></i> Portal Viajero</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container main-content">
+    <main class="content-column" role="main">
+      <section class="forms-preview" aria-labelledby="funcionarios-heading">
+        <div class="section-title">
+          <h2 id="funcionarios-heading"><i class="fas fa-user-shield" aria-hidden="true"></i> Acceso Funcionarios</h2>
+        </div>
+        <div class="forms-container">
+          <div class="form-card">
+            <div class="form-header">
+              <h3><i class="fas fa-user-shield" aria-hidden="true"></i> Acceso al Sistema</h3>
+            </div>
+            <div class="form-body">
+              <div class="form-group">
+                <label for="funcionario-user">Usuario</label>
+                <input type="text" id="funcionario-user" placeholder="Ingrese su usuario" autocomplete="username" />
+              </div>
+              <div class="form-group">
+                <label for="funcionario-pass">Contraseña</label>
+                <input type="password" id="funcionario-pass" placeholder="Ingrese su contraseña" autocomplete="current-password" />
+              </div>
+              <div class="form-group">
+                <label for="funcionario-org">Organismo</label>
+                <select id="funcionario-org">
+                  <option value="">Seleccione organismo</option>
+                  <option value="aduanas">Aduanas</option>
+                  <option value="pdi">PDI</option>
+                  <option value="sag">SAG</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-footer">
+              <button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Ingresar al Sistema</button>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="form-header">
+              <h3><i class="fas fa-search" aria-hidden="true"></i> Consulta de Viajeros</h3>
+            </div>
+            <div class="form-body">
+              <div class="form-group">
+                <label for="consulta-doc">Documento de Identidad</label>
+                <input type="text" id="consulta-doc" placeholder="Número de documento" />
+              </div>
+              <div class="form-group">
+                <label for="consulta-pais">País de Origen</label>
+                <input type="text" id="consulta-pais" placeholder="País de origen" />
+              </div>
+              <div class="form-group">
+                <label for="consulta-fecha">Fecha de Cruce</label>
+                <input type="date" id="consulta-fecha" />
+              </div>
+            </div>
+            <div class="form-footer">
+              <button class="btn btn-primary" type="submit"><i class="fas fa-search" aria-hidden="true"></i> Buscar Información</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="sidebar" role="complementary" aria-label="Información importante">
+      <h2 class="sidebar-title"><i class="fas fa-exclamation-circle" aria-hidden="true"></i> Información Importante</h2>
+      <ul class="sidebar-links" role="list">
+        <li role="listitem"><a href="#" class="active"><i class="fas fa-passport" aria-hidden="true"></i> Requisitos de Viaje</a></li>
+        <li role="listitem"><a href="#"><i class="fas fa-map-marked-alt" aria-hidden="true"></i> Pasos Fronterizos</a></li>
+        <li role="listitem"><a href="#"><i class="fas fa-file-contract" aria-hidden="true"></i> Normativa Aduanera</a></li>
+        <li role="listitem"><a href="#"><i class="fas fa-question-circle" aria-hidden="true"></i> Preguntas Frecuentes</a></li>
+        <li role="listitem"><a href="#"><i class="fas fa-phone-alt" aria-hidden="true"></i> Contacto y Soporte</a></li>
+      </ul>
+      <div class="info-card">
+        <h3><i class="fas fa-clock" aria-hidden="true"></i> Horarios de Atención</h3>
+        <p>Los pasos fronterizos terrestres atienden las 24 horas del día, los 7 días de la semana. Los trámites en línea están disponibles permanentemente.</p>
+      </div>
+      <div class="info-card">
+        <h3><i class="fas fa-lightbulb" aria-hidden="true"></i> Consejo Útil</h3>
+        <p>Complete sus formularios al menos 24 horas antes de su viaje para garantizar que su información esté disponible en el sistema al llegar a la frontera.</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <section class="footer-column" aria-label="Sistema Aduanero Integrado">
+          <h3>Sistema Aduanero Integrado</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Sobre el Proyecto</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Beneficios</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Noticias</a></li>
+          </ul>
+        </section>
+        <section class="footer-column" aria-label="Organismos">
+          <h3>Organismos</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Servicio Nacional de Aduanas</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> PDI - Policía de Investigaciones</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> SAG - Servicio Agrícola y Ganadero</a></li>
+          </ul>
+        </section>
+        <section class="footer-column" aria-label="Enlaces Rápidos">
+          <h3>Enlaces Rápidos</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Portal Viajero</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Acceso Funcionarios</a></li>
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Descargas</a></li>
+          </ul>
+        </section>
+        <section class="footer-column" aria-label="Contacto">
+          <h3>Contacto</h3>
+          <ul class="contact-info" role="list">
+            <li><i class="fas fa-map-marker-alt"></i> Av. Libertador Bernardo O'Higgins 1345, Santiago</li>
+            <li><i class="fas fa-phone-alt"></i> +56 2 2345 6789</li>
+            <li><i class="fas fa-envelope"></i> contacto@aduanasmodernas.cl</li>
+            <li><i class="fas fa-headset"></i> Soporte: soporte@aduanasmodernas.cl</li>
+          </ul>
+        </section>
+      </div>
+      <div class="copyright">
+        &copy; 2025 Sistema Integrado de Gestión Aduanera Fronteriza. Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".form-footer .btn");
+      forms.forEach((button) => {
+        button.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const card = this.closest(".form-card");
+          const originalText = this.innerHTML;
+
+          this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+          this.disabled = true;
+
+          setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-check"></i> Completado!';
+
+            setTimeout(() => {
+              this.innerHTML = originalText;
+              this.disabled = false;
+              card.querySelectorAll("input, select, textarea").forEach((input) => {
+                input.value = "";
+              });
+            }, 2000);
+          }, 1500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
