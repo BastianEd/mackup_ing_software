@@ -31,6 +31,7 @@
         /* Fondo de tarjetas */
       }
 
+      
       * {
         margin: 0;
         padding: 0;
@@ -734,6 +735,50 @@
           justify-content: center;
         }
       }
+        .faq-container {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          margin-top: 20px;
+        }
+
+        .faq-item {
+          background-color: #ffffff;
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          padding: 15px 20px;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+          cursor: pointer;
+          font-size: 0.95rem;
+        }
+
+        .faq-item summary {
+          font-weight: 600;
+          color: var(--dark-blue);
+          list-style: none;
+          position: relative;
+          padding-right: 20px;
+        }
+
+        .faq-item[open] summary::after {
+          content: "▲";
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+
+        .faq-item summary::after {
+          content: "▼";
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+
+        .faq-item p {
+          margin-top: 10px;
+          line-height: 1.6;
+          color: var(--medium-gray);
+        }
     </style>
 </head>
 <body>
@@ -961,7 +1006,6 @@
             Portal Viajero
           </button>
         </div>
-
         <!-- Portal Viajero -->
         <section
           role="tabpanel"
@@ -969,7 +1013,7 @@
           id="viajero-content"
           aria-labelledby="tab-viajero"
           tabindex="0"
-        >
+>
           <div class="forms-container">
             <div class="form-card">
               <div class="form-header">
@@ -1073,6 +1117,33 @@
       </div>
     </aside>
   </div>
+
+
+          <!--Preguntas frecuentes-->>
+        <!-- UBICACIÓN: DESPUÉS DE </section> DE forms-preview -->
+        <section class="forms-preview" aria-labelledby="faq-heading">
+          <div class="section-title">
+            <h2 id="faq-heading"><i class="fas fa-question-circle" aria-hidden="true"></i> Preguntas Frecuentes</h2>
+          </div>
+          <div class="faq-container">
+            <details class="faq-item">
+              <summary>¿Qué hago si olvidé mi contraseña?</summary>
+              <p>Debe contactar a su unidad de soporte institucional para restablecer su clave de acceso al sistema.</p>
+            </details>
+            <details class="faq-item">
+              <summary>¿Puedo consultar a un viajero ingresado por otro organismo?</summary>
+              <p>Sí, el sistema permite interoperabilidad, siempre y cuando cuente con los permisos necesarios.</p>
+            </details>
+            <details class="faq-item">
+              <summary>¿Qué navegador debo usar?</summary>
+              <p>Recomendamos utilizar Google Chrome o Mozilla Firefox para una mejor experiencia.</p>
+            </details>
+            <details class="faq-item">
+              <summary>¿Qué organismos pueden acceder al sistema?</summary>
+              <p>Actualmente pueden acceder Aduanas, PDI y SAG, según la configuración institucional.</p>
+            </details>
+          </div>
+        </section>
 
   <!-- Footer -->
   <footer role="contentinfo">
@@ -1328,7 +1399,9 @@
           header.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
         }
       });
-    });
+    }
+    
+    );
   </script>
 </body>
 </html>

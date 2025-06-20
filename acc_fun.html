@@ -505,17 +505,61 @@
               </div>
               <div class="form-group">
                 <label for="funcionario-org">Organismo</label>
-                <select id="funcionario-org">
-                  <option value="">Seleccione organismo</option>
-                  <option value="aduanas">Aduanas</option>
-                  <option value="pdi">PDI</option>
-                  <option value="sag">SAG</option>
-                </select>
+<select id="funcionario-org">
+  <option value="">Seleccione organismo</option>
+  <option value="">Aduanas</option>
+  <option value="">PDI</option>
+  <option value="">SAG</option>
+</select>
               </div>
             </div>
             <div class="form-footer">
-              <button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Ingresar al Sistema</button>
-            </div>
+
+<div class="form-footer">
+  <button class="btn btn-primary" id="btnConfirmar"><i class="fas fa-check-circle"></i> Confirmar acceso</button>
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const confirmarBtn = document.getElementById("btnConfirmar");
+
+    confirmarBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const usuario = document.getElementById("funcionario-user").value.trim();
+      const clave = document.getElementById("funcionario-pass").value.trim();
+      const select = document.getElementById("funcionario-org");
+      const seleccionado = select.options[select.selectedIndex].text;
+
+      if (!usuario || !clave || seleccionado === "Seleccione organismo") {
+        alert("Por favor complete todos los campos antes de continuar.");
+        return;
+      }
+
+      let destino = "";
+      if (seleccionado === "Aduanas") destino = "acc_adu.html";
+      else if (seleccionado === "PDI") destino = "acc_pdi.html";
+      else if (seleccionado === "SAG") destino = "acc_sag.html";
+      else {
+        alert("Organismo no válido.");
+        return;
+      }
+
+      confirmarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirigiendo...';
+      confirmarBtn.disabled = true;
+
+      setTimeout(() => {
+        window.location.href = destino;
+      }, 1000);
+    });
+  });
+</script>
+
+
+
+
+</div>
           </div>
 
           <div class="form-card">
@@ -627,5 +671,14 @@
       });
     });
   </script>
+  <script>
+  document.getElementById("funcionario-org").addEventListener("change", function () {
+    const destino = this.value;
+    if (destino) {
+      window.location.href = destino;
+    }
+  });
+</script>
+
 </body>
 </html>

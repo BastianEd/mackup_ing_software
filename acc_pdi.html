@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceso Funcionarios - PDI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ <style>
+  :root {
+    --pdi-blue: #004080;
+    --pdi-light-blue: #cce0ff;
+    --dark-text: #1a2b42;
+    --card-bg: #ffffff;
+    --medium-gray: #5c677d;
+  }
+
+  body {
+    background: linear-gradient(135deg, var(--pdi-light-blue), #e6e9f0);
+    color: var(--dark-text);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .forms-preview {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .section-title {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--pdi-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title h2 {
+    font-size: 1.8rem;
+    color: var(--pdi-blue);
+    font-weight: 700;
+  }
+
+  .stats-section {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .stat-btn {
+    width: 220px;
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+
+  .stat-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+  }
+
+  .stat-btn span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat-btn:hover {
+    transform: translateY(-5px);
+  }
+
+  .stat-item {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    border-left: 4px solid var(--pdi-blue);
+    margin-bottom: 15px;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto 30px;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: var(--pdi-blue);
+  }
+
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--pdi-blue);
+  }
+
+  .stat-label {
+    font-size: 0.95rem;
+    color: var(--medium-gray);
+    font-weight: 500;
+  }
+
+  .info-card {
+    background: var(--card-bg);
+    border-left: 4px solid var(--pdi-blue);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.03);
+  }
+
+  .info-card h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: var(--pdi-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .info-card p {
+    color: var(--medium-gray);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .section-block {
+    background: var(--card-bg);
+    border-left: 4px solid var(--pdi-blue);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .section-block h3 {
+    color: var(--pdi-blue);
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    border-bottom: 2px solid var(--pdi-blue);
+    padding-bottom: 8px;
+  }
+
+  .section-block form {
+    margin-bottom: 20px;
+  }
+
+  .section-block input,
+  .section-block select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+  }
+
+  .section-block button[type="submit"] {
+    padding: 10px 20px;
+    background-color: var(--pdi-blue);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .section-block button[type="submit"]:hover {
+    background-color: #002b66;
+  }
+
+  .section-block table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+
+  .section-block th,
+  .section-block td {
+    padding: 10px;
+    border: 1px solid #4b4a4a;
+    text-align: left;
+  }
+
+  .section-block thead tr {
+    background-color: var(--pdi-blue);
+    color: white;
+  }
+
+
+:root {
+  --chile-blue: #0039a6;
+  --chile-red: #d52b1e;
+  --dark-blue: #002366;
+  --light-red: #ff6b6b;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, var(--dark-blue) 0%, var(--chile-blue) 100%);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--chile-red) 0%, #b22222 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+}
+
+.logo-text span {
+  color: var(--light-red);
+  font-weight: 600;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+nav a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  transition: color 0.3s;
+  position: relative;
+  font-size: 16px;
+  padding: 8px 0;
+  white-space: nowrap;
+}
+
+nav a:hover,
+nav a.active {
+  color: white;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: var(--chile-red);
+  transition: width 0.3s;
+}
+
+nav a:hover::after,
+nav a.active::after {
+  width: 100%;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--chile-red) 0%, #c41e3a 100%);
+  color: white;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1.5px solid white;
+  color: white;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Footer */
+footer {
+  background: linear-gradient(135deg, var(--dark-blue) 0%, var(--chile-blue) 100%);
+  color: white;
+  padding: 50px 0 20px;
+  margin-top: 50px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-column h3 {
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  position: relative;
+  padding-bottom: 12px;
+  font-weight: 600;
+}
+
+.footer-column h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background-color: var(--chile-red);
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+.contact-info {
+  list-style: none;
+}
+
+.contact-info li {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.contact-info i {
+  color: var(--light-red);
+  min-width: 20px;
+  margin-top: 4px;
+}
+
+.copyright {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+
+</style>
+
+
+  <script>
+    function toggleStat(id) {
+      document.querySelectorAll('.stat-item').forEach(el => el.classList.add('hidden'));
+      document.getElementById(id).classList.toggle('hidden');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-flag" aria-hidden="true"></i>
+        </div>
+        <div class="logo-text">
+          Aduanas <span>Chile</span>
+        </div>
+      </div>
+
+  </header>
+
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+  <button onclick="window.location.href='index.html'" style="
+    padding: 10px 20px;
+    background-color: #d52b1e;
+    color: rgb(77, 73, 73);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  ">
+    Salir
+  </button>
+</div>
+
+
+
+<script>
+  function agregarFilaPDI(event) {
+    event.preventDefault();
+    const rut = document.getElementById("input-rut-pdi").value.trim();
+    const descripcion = document.getElementById("input-descripcion-pdi").value.trim();
+    const fecha = document.getElementById("input-fecha-pdi").value;
+
+    if (!rut || !descripcion || !fecha) return alert("Todos los campos son obligatorios.");
+    if (!validarRUT(rut)) return alert("RUT inválido. Ejemplo válido: 12.345.678-5");
+
+    const tbody = document.querySelector("#pdi-table tbody");
+    const nuevaFila = document.createElement("tr");
+    nuevaFila.innerHTML = `
+      <td>${rut}</td>
+      <td>${descripcion}</td>
+      <td>${fecha}</td>
+      <td style="text-align: center;">
+        <button class="delete-btn" onclick="deleteRow(this)">Eliminar</button>
+      </td>
+    `;
+    tbody.appendChild(nuevaFila);
+    document.getElementById("formulario-pdi").reset();
+  }
+
+  function validarRUT(rut) {
+    rut = rut.replace(/\./g, "").replace(/-/g, "").toUpperCase();
+    if (!/^(\d{7,8})([0-9K])$/.test(rut)) return false;
+    let cuerpo = rut.slice(0, -1);
+    let dv = rut.slice(-1);
+    let suma = 0, multiplo = 2;
+    for (let i = cuerpo.length - 1; i >= 0; i--) {
+      suma += parseInt(cuerpo.charAt(i)) * multiplo;
+      multiplo = multiplo === 7 ? 2 : multiplo + 1;
+    }
+    let digitoEsperado = 11 - (suma % 11);
+    digitoEsperado = digitoEsperado === 11 ? '0' : digitoEsperado === 10 ? 'K' : digitoEsperado.toString();
+    return dv === digitoEsperado;
+  }
+
+  function deleteRow(button) {
+    const row = button.closest('tr');
+    row.remove();
+  }
+</script>
+
+
+
+  <section class="forms-preview" aria-labelledby="pdi-info">
+    <div class="section-title">
+      <h2 id="pdi-info">
+        <i class="fas fa-shield-alt" aria-hidden="true"></i> Información para Funcionarios PDI
+      </h2>
+    </div>
+
+<div class="section-block">
+  <h3>Operativos de la PDI</h3>
+
+  <form id="formulario-pdi" onsubmit="agregarFilaPDI(event)">
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <input type="text" id="input-rut-pdi" placeholder="RUT" required>
+      <select id="input-descripcion-pdi" required>
+        <option value="">Descripción</option>
+        <option value="Control migratorio">Control migratorio</option>
+        <option value="Detención por orden judicial">Detención por orden judicial</option>
+        <option value="Fiscalización en terminal">Fiscalización en terminal</option>
+        <option value="Operativo en frontera norte">Operativo en frontera norte</option>
+      </select>
+      <input type="date" id="input-fecha-pdi" required>
+      <button type="submit">Agregar</button>
+    </div>
+  </form>
+
+  <table id="pdi-table">
+    <thead>
+      <tr>
+        <th>RUT DE QUIEN LO HIZO</th>
+        <th>Descripción</th>
+        <th>Fecha</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>13.456.789-2</td>
+        <td>Control migratorio</td>
+        <td>2025-06-12</td>
+        <td style="text-align: center;">
+          <button class="delete-btn" onclick="deleteRow(this)">Eliminar</button>
+        </td>
+      </tr>
+      <tr>
+        <td>16.789.123-5</td>
+        <td>Detención por orden judicial</td>
+        <td>2025-06-15</td>
+        <td style="text-align: center;">
+          <button class="delete-btn" onclick="deleteRow(this)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+    <div class="stats-section">
+      <button class="stat-btn" style="background-image: url('https://cdn-icons-png.flaticon.com/512/2948/2948425.png');" onclick="toggleStat('stat1')">
+        <span>Investigaciones</span>
+      </button>
+      <button class="stat-btn" style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png');" onclick="toggleStat('stat2')">
+        <span>Detenciones</span>
+      </button>
+      <button class="stat-btn" style="background-image: url('https://cdn-icons-png.flaticon.com/512/1144/1144760.png');" onclick="toggleStat('stat3')">
+        <span>Operativos</span>
+      </button>
+      <button class="stat-btn" style="background-image: url('https://cdn-icons-png.flaticon.com/512/1046/1046870.png');" onclick="toggleStat('stat4')">
+        <span>Reportes</span>
+      </button>
+    </div>
+
+    <div id="stat1" class="stat-item hidden">
+      <div class="stat-icon"><i class="fas fa-search"></i></div>
+      <div class="stat-value">1.230</div>
+      <div class="stat-label">Investigaciones activas</div>
+    </div>
+
+    <div id="stat2" class="stat-item hidden">
+      <div class="stat-icon"><i class="fas fa-handcuffs"></i></div>
+      <div class="stat-value">87</div>
+      <div class="stat-label">Detenciones en el mes</div>
+    </div>
+
+    <div id="stat3" class="stat-item hidden">
+      <div class="stat-icon"><i class="fas fa-user-shield"></i></div>
+      <div class="stat-value">34</div>
+      <div class="stat-label">Operativos realizados</div>
+    </div>
+
+    <div id="stat4" class="stat-item hidden">
+      <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+      <div class="stat-value">520</div>
+      <div class="stat-label">Reportes generados</div>
+    </div>
+
+    <div class="info-card">
+      <h3><i class="fas fa-info-circle"></i> Funciones Clave</h3>
+      <p>
+        La Policía de Investigaciones (PDI) es el cuerpo civil especializado en investigación criminal, encargada de esclarecer delitos y mantener el orden público a través de acciones tácticas y técnicas.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3><i class="fas fa-tools"></i> Herramientas Disponibles</h3>
+      <p>
+        Plataformas tecnológicas de análisis criminal, bases de datos integradas, sistemas de monitoreo y coordinación con otros organismos nacionales e internacionales para la lucha contra el crimen.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3><i class="fas fa-user-check"></i> Requisitos de Ingreso</h3>
+      <p>
+        Credenciales vigentes de la institución, autorización del mando superior y capacitación en procedimientos de investigación y manejo de información sensible.
+      </p>
+    </div>
+
+    <div class="info-card">
+      <h3><i class="fas fa-lightbulb"></i> Buenas Prácticas</h3>
+      <p>
+        Mantener la confidencialidad, actuar con ética y respeto a los derechos humanos, documentar correctamente las diligencias y coordinar eficazmente con unidades policiales y judiciales.
+      </p>
+    </div>
+  </section>
+<!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <section class="footer-column" aria-label="Sistema Aduanero Integrado">
+          <h3>Sistema Aduanero Integrado</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href=""><i class="fas fa-chevron-right"></i> Sobre el Proyecto</a></li>
+            <li role="listitem"><a href="./index.html#estadisticas-vinculo"><i class="fas fa-chevron-right"></i> Beneficios</a></li>
+            <li role="listitem"><a href="https://www.pasosfronterizos.gov.cl/noticias/"><i class="fas fa-chevron-right"></i> Noticias</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-column" aria-label="Organismos">
+          <h3>Organismos</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href="https://www.aduana.cl/aduana/site/edic/base/port/inicio.html"><i class="fas fa-chevron-right"></i> Servicio Nacional de Aduanas</a></li>
+            <li role="listitem"><a href="https://www.pdichile.cl/"><i class="fas fa-chevron-right"></i> PDI - Policía de Investigaciones</a></li>
+            <li role="listitem"><a href="https://www.sag.gob.cl/"><i class="fas fa-chevron-right"></i> SAG - Servicio Agrícola y Ganadero</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-column" aria-label="Enlaces Rápidos">
+          <h3>Enlaces Rápidos</h3>
+          <ul class="footer-links" role="list">
+            <li role="listitem"><a href="#"><i class="fas fa-chevron-right"></i> Portal Viajero</a></li>
+            <li role="listitem"><a href="./acc_fun.html"><i class="fas fa-chevron-right"></i> Acceso Funcionarios</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-column" aria-label="Contacto">
+          <h3>Contacto</h3>
+          <ul class="contact-info" role="list">
+            <li><i class="fas fa-map-marker-alt"></i> Av. Libertador Bernardo O'Higgins 1345, Santiago</li>
+            <li><i class="fas fa-phone-alt"></i> +56 2 1111 1111</li>
+            <li><i class="fas fa-envelope"></i> contacto@aduanasmodernas.cl</li>
+            <li><i class="fas fa-headset"></i> soporte@aduanasmodernas.cl</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="copyright">
+        &copy; 2025 Sistema Integrado de Gestión Aduanera Fronteriza. Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
